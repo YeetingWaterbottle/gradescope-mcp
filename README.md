@@ -1,4 +1,4 @@
-# Gradescope MCP Lite
+# Gradescope MCP
 
 A lightweight, read-only MCP server for Gradescope. It provides student-focused
 access to courses, assignments, deadlines, submission history, and uploaded
@@ -6,7 +6,8 @@ submission files through a small set of MCP tools.
 
 The server is built on
 [`gradescopeapi`](https://github.com/nyuoss/gradescope-api) and does not expose
-Gradescope write operations.
+Gradescope write operations. Downloading a submitted file only creates a local
+copy; it does not modify anything on Gradescope.
 
 ## Features
 
@@ -17,8 +18,8 @@ Gradescope write operations.
 - `gradescope_get_submission_files` — filenames and metadata for the student's own uploaded files
 - `gradescope_download_submission_file` — download one of those files to the local machine
 
-There are no submission-upload, grading, roster-management, extension-editing,
-or other Gradescope write tools.
+The server does not upload submissions or expose grading, roster management,
+extension management, or other Gradescope write operations.
 
 > Gradescope does not provide an official public student API. `gradescopeapi`
 > works by parsing Gradescope pages, so site changes can occasionally require
@@ -27,22 +28,22 @@ or other Gradescope write tools.
 ## Requirements
 
 - Python 3.11+
+- [`uv`](https://docs.astral.sh/uv/)
 - A Gradescope email/password login
-- `uv` is recommended, but not required
 
 If you normally enter Gradescope only through university SSO, create a native
 Gradescope password using Gradescope's password-reset flow. Do not store your
 university SSO password here.
 
-## Install from a clone with uv
+## Setup
 
 ```bash
-git clone <YOUR_GITHUB_REPO_URL>
+git clone https://github.com/YeetingWaterbottle/gradescope-mcp.git
 cd gradescope-mcp
 uv sync --no-dev
 ```
 
-Copy the example credential file:
+Create a local credential file from the example:
 
 ```bash
 cp .env.example .env
@@ -63,7 +64,7 @@ GRADESCOPE_PASSWORD="your-native-gradescope-password"
 
 `.env` is ignored by Git.
 
-Start the MCP server:
+Run the server:
 
 ```bash
 uv run gradescope-mcp
@@ -85,35 +86,25 @@ uv run gradescope-mcp --env-file C:\Users\you\.config\gradescope.env
 Environment variables supplied by the parent process take precedence over
 values in the dotenv file.
 
-## Install directly from GitHub
+## Run directly from GitHub
 
-Once this repository is published, users can run it without manually creating
-a virtual environment:
-
-```bash
-uvx --from git+https://github.com/OWNER/REPO.git gradescope-mcp --env-file /path/to/.env
-```
-
-For reproducible installations, replace the URL with a release tag, for
-example:
+Run the server directly from GitHub with `uvx`:
 
 ```bash
-uvx --from git+https://github.com/OWNER/REPO.git@v0.1.0 gradescope-mcp --env-file /path/to/.env
+uvx --from git+https://github.com/YeetingWaterbottle/gradescope-mcp.git gradescope-mcp --env-file /absolute/path/to/gradescope.env
 ```
 
 ## MCP client configuration
 
-The exact UI varies by client. A generic stdio configuration is:
+The exact UI varies by client. A generic stdio configuration using the public
+GitHub repository is:
 
 ```json
 {
-  "command": "uv",
+  "command": "uvx",
   "args": [
-    "run",
-    "--directory",
-    "/absolute/path/to/gradescope-mcp",
-    "--frozen",
-    "--no-dev",
+    "--from",
+    "git+https://github.com/YeetingWaterbottle/gradescope-mcp.git",
     "gradescope-mcp",
     "--env-file",
     "/absolute/path/to/gradescope.env"
@@ -121,14 +112,14 @@ The exact UI varies by client. A generic stdio configuration is:
 }
 ```
 
-On Windows, use normal JSON escaping for paths, for example
-`"C:\\Users\\you\\gradescope-mcp"`.
+On Windows, use normal JSON escaping for the credential path, for example
+`"C:\\Users\\you\\.config\\gradescope.env"`.
 
-`examples/chat-on-steroids.json` contains a portable template. Replace the two
-placeholder paths with absolute paths for the machine where Chat On Steroids
-runs.
+`examples/chat-on-steroids.json` contains the same configuration as a reusable
+template. Replace the credential-file path with an absolute path on your
+machine.
 
-## Tool behavior
+## Tools
 
 ### `gradescope_list_courses`
 
@@ -188,7 +179,7 @@ overwrite an existing local file.
 
 ## Read-only design
 
-The project intentionally exposes only student-focused read operations.
+The project exposes only student-focused read operations against Gradescope.
 Instructor-oriented and write operations such as roster management, grading,
 extensions, assignment configuration, and submission uploads are not included.
 
@@ -206,7 +197,7 @@ CI runs on Linux, macOS, and Windows with Python 3.11–3.13.
 - Never commit `.env`.
 - Prefer a Gradescope-specific/native password rather than reusing an important password.
 - Keep credential files readable only by your user where your OS supports that.
-- This project is read-only, but the underlying Gradescope session still has the same access as your account.
+- The MCP exposes only read operations against Gradescope, but the credentials still represent your account and should be protected accordingly.
 
 ## License
 

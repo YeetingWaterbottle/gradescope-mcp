@@ -1,7 +1,7 @@
 [project]
 name = "gradescope-mcp-lite"
 version = "0.1.0"
-description = "Minimal read-only Gradescope MCP server for courses and assignments"
+description = "Lightweight, read-only MCP server for Gradescope"
 readme = "README.md"
 license = { file = "LICENSE" }
 requires-python = ">=3.11"
@@ -20,6 +20,11 @@ classifiers = [
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
 ]
+
+[project.urls]
+Homepage = "https://github.com/YeetingWaterbottle/gradescope-mcp"
+Repository = "https://github.com/YeetingWaterbottle/gradescope-mcp"
+Issues = "https://github.com/YeetingWaterbottle/gradescope-mcp/issues"
 
 [project.scripts]
 gradescope-mcp = "gradescope_mcp.server:main"
