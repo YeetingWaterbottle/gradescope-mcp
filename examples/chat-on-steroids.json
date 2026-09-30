@@ -1,0 +1,17 @@
+{
+  "name": "Gradescope",
+  "source": {
+    "kind": "command",
+    "command": "uv",
+    "args": [
+      "run",
+      "--directory",
+      "<ABSOLUTE_PATH_TO_REPO>",
+      "--frozen",
+      "--no-dev",
+      "gradescope-mcp",
+      "--env-file",
+      "<ABSOLUTE_PATH_TO_ENV_FILE>"
+    ]
+  }
+}

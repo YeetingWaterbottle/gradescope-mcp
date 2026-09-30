@@ -1,0 +1,37 @@
+[project]
+name = "gradescope-mcp-lite"
+version = "0.1.0"
+description = "Minimal read-only Gradescope MCP server for courses and assignments"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.11"
+dependencies = [
+  "gradescopeapi==1.8.1",
+  "mcp>=1.30,<2",
+  "python-dotenv>=1.0,<2",
+]
+
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+]
+
+[project.scripts]
+gradescope-mcp = "gradescope_mcp.server:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/gradescope_mcp"]
+
+[dependency-groups]
+dev = [
+  "pytest>=8,<10",
+]

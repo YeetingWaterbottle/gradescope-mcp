@@ -1,0 +1,2 @@
+"""Minimal Gradescope MCP server."""
+
